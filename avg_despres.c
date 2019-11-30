@@ -10,49 +10,49 @@ void main(int argc, char** argv){
     float average;
     int arrayA[100];
     float D[100];
-
+    
     char option;
 
     MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &p);
-
+    
 
 /*********************************************************************
 ****************************** Erwthma 1 *****************************
 **********************************************************************/
     option = '1';
     count = 0;
-
-
+    
+    
     while (option == '1') {
-
+    
         if(my_rank == 0){
-
+        
             if (count++){
-                for (j=0; j<50; j++)
+                for (j=0; j<53; j++)
                     printf("=");
-                printf("\n\t\t* No. of runs: %d *\n",count);
+                printf("\n\t\t * No. of runs: %d *\n",count);
             }
-
-            printf("\nGive amount of numbers (up to 100): ");
+            
+            printf("\n Give amount of numbers (up to 100): ");
             scanf("%d", &n);
             //n=8; //debug
-            printf("Insert %d numbers: ", n);
-
+            printf(" Insert %d numbers: ", n);
+            
             for (j=0; j<n; j++)
                 scanf("%d", &arrayA[j]);
 
             for (target = 1; target < p; target++){
                 MPI_Send(&n, 1, MPI_INT, target, tag1, MPI_COMM_WORLD);
-
+               
                 num_of_elements = n/p;
                 k = num_of_elements;
             }
             for (target = 1; target < p; target++){
                 MPI_Send(&arrayA[k], num_of_elements, MPI_INT, target, tag2, MPI_COMM_WORLD);
-                k += num_of_elements;
+                k += num_of_elements;  
             }
         }
         else{
@@ -70,18 +70,17 @@ void main(int argc, char** argv){
         if (my_rank != 0)
             MPI_Send(&res, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD);
         else{
-            finres = res;
             printf(" proccess %d result: %d\n", my_rank, res);
 
             for (source = 1; source < p; source++){
                 MPI_Recv(&res, 1, MPI_INT, source, tag1, MPI_COMM_WORLD, &status);
-                finres = finres + res;
                 printf(" proccess %d result: %d\n", source, res);
+                res += res;
            }
 
-            printf("\tSum: %d \n",finres);
-            average = finres / n;
-            printf("\tAverage: %d/%d = %.1f\n\n",finres,n, (float)finres / n);
+            printf("\tSum: %d \n",res);
+            average = res / n;
+            printf("\tAverage: %d/%d = %.1f\n\n",res,n, (float)res / n);
         }
 
     /*********************************************************************
@@ -104,16 +103,15 @@ void main(int argc, char** argv){
         if (my_rank != 0)
             MPI_Send(&res, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD);
         else{
-            finres = res;
             printf(" proccess %d result: %d\n", my_rank, res);
 
             for (source = 1; source < p; source++){
                MPI_Recv(&res, 1, MPI_INT, source, tag1, MPI_COMM_WORLD, &status);
-               finres = finres + res;
+               res += res;
                printf(" proccess %d result: %d\n", source, res);
             }
 
-            printf("\tdespresion: %d/%d = %.1f\n\n",finres,n, (float)finres / n);
+            printf("\tdespresion: %d/%d = %.1f\n\n",res,n, (float)res / n);
         }
 
     /*********************************************************************
@@ -131,17 +129,17 @@ void main(int argc, char** argv){
                 if (arrayA[k] < min_l)
                     min_l = arrayA[k];
             }
-
+            
             for(target = 1; target < p; target++){
                 MPI_Send(&min_l, 1, MPI_INT, target, tag1, MPI_COMM_WORLD);
                 MPI_Send(&max_l, 1, MPI_INT, target, tag2, MPI_COMM_WORLD);
             }
         }
-
+        
         if (my_rank!=0){
             MPI_Recv(&min_l, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD, &status);
             MPI_Recv(&max_l, 1, MPI_INT, 0, tag2, MPI_COMM_WORLD, &status);
-
+            
             for (k=0; k<num_of_elements; k++){
                 D[k] = ((arrayA[k] - min_l) / (float)(max_l - min_l)) * 100;
             }
@@ -158,8 +156,8 @@ void main(int argc, char** argv){
             for (k=0; k<n; k++)
                 printf("d[%d]: %3.1f%%\n", k, D[k]);
         }
-
-
+        
+        
             if (my_rank == 0) {
                 printf("\n\n\t\t1. Continue\n\t\t2. Kill\n\t\tPlease enter your option: ");
                 scanf(" %c", &option);
@@ -169,6 +167,6 @@ void main(int argc, char** argv){
             } else
                 MPI_Recv(&option, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD, &status);
     }
-
+    
     MPI_Finalize();
 }
