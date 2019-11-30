@@ -1,10 +1,3 @@
-//Orestis.K
-//cse42417
-//compiled with gcc v.9.2.1-19
-//          and
-//ran on Debian10_x64 with 5.3.0 kernel
-//without any errors or warnings
-
 #include <stdio.h>
 #include "mpi.h"
 
