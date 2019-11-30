@@ -3,7 +3,7 @@
 
 void main(int argc, char** argv){
     int my_rank;
-    int k,res,finres,num_of_elements, p, n;
+    int k,res,num_of_elements, p, n;
     int source,target, count;
     int tag1=1, tag2=2;
     int min_l,max_l,var,j;
