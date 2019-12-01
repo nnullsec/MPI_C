@@ -1,3 +1,4 @@
+//edit lines 40-51 to enter production mode
 #include <stdio.h>
 #include "mpi.h"
 
@@ -42,7 +43,7 @@ void main(int argc, char** argv){
 
             //printf("\n Give amount of numbers (up to 100): ");
             //scanf("%d", &n);
-            n=15; //debug
+            n=50; //dev
             //printf(" Insert %d numbers: ", n);
 
             for (j=0; j<n; j++)
