@@ -171,20 +171,21 @@ void main(int argc, char** argv){
             for (source = 1, k=elem_arr[0]; source < p; source++){
                 MPI_Recv(D+k, elem_arr[source], MPI_FLOAT, source, tag1, MPI_COMM_WORLD, &status);
                 k+=elem_arr[source];
-                }
+            }
 
             for (k=0; k<n; k++)
                 printf("d[%d]: %3d -> %4.2f%%\n", k,arrayA[k], D[k]);
         }
 
-            if (my_rank == 0) {
-                printf("\n\n\t\t1. Continue\n\t\t2. Kill\n\t\tPlease enter your option: ");
-                scanf(" %c", &option);
-                printf("\n\n");
-                for (target = 1; target < p; target++)
-                    MPI_Send(&option, 1, MPI_INT, target, tag1, MPI_COMM_WORLD);
-            } else
-                MPI_Recv(&option, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD, &status);
+        if (my_rank == 0) {
+            printf("\n\n\t\t1. Continue\n\t\t2. Kill\n\t\tPlease enter your option: ");
+            scanf(" %c", &option);
+            printf("\n\n");
+            for (target = 1; target < p; target++)
+                MPI_Send(&option, 1, MPI_INT, target, tag1, MPI_COMM_WORLD);
+        }
+        else
+            MPI_Recv(&option, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD, &status);
     }
 
     MPI_Finalize();
