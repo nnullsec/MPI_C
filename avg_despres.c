@@ -1,13 +1,14 @@
-//edit lines 40-51 to enter production mode
 #include <stdio.h>
 #include "mpi.h"
 
+#define n 20 
+
 void main(int argc, char** argv){
     int my_rank;
-    int k,res = 0,num_of_elements, p, n;
-    int source,target, count;
+    int k,res = 0,num_of_elements, p;
+    int source,target;
     int tag1=1, tag2=2;
-    int min_l,max_l,var,j;
+    int min_l,max_l,var,j,count = 0;
     float average;
     int arrayA[100];
     float D[100];
@@ -15,7 +16,7 @@ void main(int argc, char** argv){
     int rem,div;
     int elem_arr[50];
 
-    char option;
+    char option='1';
 
     MPI_Status status;
     MPI_Init(&argc, &argv);
@@ -26,29 +27,21 @@ void main(int argc, char** argv){
 /*********************************************************************
 ****************************** Erwthma 1 *****************************
 **********************************************************************/
-    option = '1';
-    count = 0;
-
 
     while (option == '1') {
 
         if(my_rank == 0){
 
             if (count++){
-                for (j=0; j<53; j++)
+                for (j=0; j<5; j++)
                     printf("=");
-                //printf("\n\t\t * No. of runs: %d *\n",count);
+                printf("  # of times executed: %2d  ", count);
+                for (j=0; j<5; j++)
+                    printf("=");
             }
 
-
-            //printf("\n Give amount of numbers (up to 100): ");
-            //scanf("%d", &n);
-            n=50; //dev
-            //printf(" Insert %d numbers: ", n);
-
             for (j=0; j<n; j++)
-                arrayA[j] = j+1; //dev
-                //scanf("%d", &arrayA[j]);
+                arrayA[j] = j+1;
 
 
             rem = n % p;
@@ -74,11 +67,11 @@ void main(int argc, char** argv){
         }
 
         if (my_rank == 0)
-            printf("\n\t** Erwthma 1 **\n");
+            printf("\n\n\t** Erwthma 1 **\n");
 
-        for(k=0; k<*elem_arr; k++){
+        res=0;
+        for(k=0; k<*elem_arr; k++)
             res += arrayA[k];
-        }
 
         if (my_rank != 0)
             MPI_Send(&res, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD);
@@ -174,13 +167,14 @@ void main(int argc, char** argv){
             }
 
             for (k=0; k<n; k++)
-                printf("d[%d]: %3d -> %4.2f%%\n", k,arrayA[k], D[k]);
+                printf("d[%d]:%6d -> %5.2f%%\n", k,arrayA[k], D[k]);
         }
 
         if (my_rank == 0) {
-            printf("\n\n\t\t1. Continue\n\t\t2. Kill\n\t\tPlease enter your option: ");
+            printf("\n--- Program ends here ---");
+            printf("\n1. Repeat\n2. Kill\n");
             scanf(" %c", &option);
-            printf("\n\n");
+            printf("\n");
             for (target = 1; target < p; target++)
                 MPI_Send(&option, 1, MPI_INT, target, tag1, MPI_COMM_WORLD);
         }
