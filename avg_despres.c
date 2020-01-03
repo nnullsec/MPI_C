@@ -84,11 +84,11 @@ int main(int argc, char** argv){
                     MPI_Recv(&res, 1, MPI_INT, source, tag1, MPI_COMM_WORLD, &status);
 
                     if(option=='1')
-                        printf(" proccess %d result2: %d\n", source, res);
+                        printf(" proccess %d result: %d\n", source, res);
 
                     k += res;
                 }
-                
+
                 res = k;
 
                 if(option=='1')
