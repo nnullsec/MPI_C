@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include "mpi.h"
 
-
-#define COLOR_RED     "\x1b[31m"
-#define COLOR_CYAN    "\x1b[36m"
-#define COLOR_RESET   "\x1b[0m"
+#define RED     "\x1b[31m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
 
 #define n 20
 
@@ -32,8 +31,8 @@ int main(int argc, char** argv){
 
     for(;;){
         if(my_rank == 0){
-            printf(COLOR_RED"\n---- Program starts here ----\n"COLOR_RESET);
-            printf(COLOR_CYAN" 1. Average\n 2. Despersion \n 3. Custom D vector\n Input: ");
+            printf(RED"\n---- Program starts here ----\n"RESET);
+            printf(CYAN" 1. Average\n 2. Despersion \n 3. Custom D vector\n Input: ");
             fflush(stdout);
             scanf(" %c",&option);
 
@@ -73,7 +72,7 @@ int main(int argc, char** argv){
         if(option=='1' || option=='2'){
 
             if (my_rank == 0 && option=='1')
-                printf(COLOR_CYAN"\n\n\t** Erwthma 1 **\n"COLOR_RESET);
+                printf(CYAN"\n\n\t** Erwthma 1 **\n"RESET);
 
             res=0;
             for(k=0; k<*elem_arr; k++)
@@ -123,7 +122,7 @@ int main(int argc, char** argv){
                 res += ((arrayA[k]-average)*(arrayA[k]-average));
 
             if (my_rank == 0)
-                printf(COLOR_CYAN"\n\t** Erwthma 2 **\n"COLOR_RESET);
+                printf(CYAN"\n\t** Erwthma 2 **\n"RESET);
 
             if (my_rank != 0)
                 MPI_Send(&res, 1, MPI_INT, 0, tag1, MPI_COMM_WORLD);
@@ -176,7 +175,7 @@ int main(int argc, char** argv){
             }
 
             if (my_rank == 0)
-                printf(COLOR_CYAN"\n\t** Erwthma 3 **\n"COLOR_RESET);
+                printf(CYAN"\n\t** Erwthma 3 **\n"RESET);
 
             if (my_rank == 0){
                 for (k=0; k<*elem_arr; k++)
@@ -196,8 +195,8 @@ int main(int argc, char** argv){
         /**************************************************************************/
         if(my_rank==0){
             while(1){
-                printf(COLOR_RED"\n---- Program ends here ----\n"COLOR_RESET);
-                printf(COLOR_CYAN" Press: 0 to terminate\n Press: 1 to repeat \n Input: "COLOR_RESET);
+                printf(RED"\n---- Program ends here ----\n"RESET);
+                printf(CYAN" Press: 0 to terminate\n Press: 1 to repeat \n Input: "RESET);
                 fflush(stdout);
                 scanf(" %c",&option);
                 printf("\n\n");
