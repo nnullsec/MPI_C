@@ -12,7 +12,7 @@ int main(int argc, char** argv){
 	int my_rank,p,intsz;
 	int arrA[N],arrB[N],arrC[N][N],arrD[N][N];
 	int tmparrA[N*N]={0}, tmparrB[N*N]={0}, locA, rowC[N*N], rowD[N*N], res[N*N];
-	int i,j,k,f,sum=0,nduty=1;
+	int i,j,k,f,sum=0,nopr=1;
 	char option='0';
 
 	MPI_Status status;
@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 				return -1;
 			}
 			else if(N!=p)
-				nduty=N/p;
+				nopr=N/p;
 
 			for(i=0; i<N; i++){
 				for(j=0; j<N; j++){
@@ -89,20 +89,20 @@ int main(int argc, char** argv){
 		}
 
 MPI_Bcast(&option, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
-MPI_Bcast(&nduty, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
+MPI_Bcast(&nopr, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 
 /*************************************************
 ******************* erwthma 1 ********************
 *************************************************/
 
 		if(option=='1'){
-			MPI_Scatter(arrC, N*nduty, MPI_INT, tmparrA, N*nduty, MPI_INT, 0, MPI_COMM_WORLD);
-			MPI_Scatter(arrD, N*nduty, MPI_INT, tmparrB, N*nduty, MPI_INT, 0, MPI_COMM_WORLD);
+			MPI_Scatter(arrC, N*nopr, MPI_INT, tmparrA, N*nopr, MPI_INT, 0, MPI_COMM_WORLD);
+			MPI_Scatter(arrD, N*nopr, MPI_INT, tmparrB, N*nopr, MPI_INT, 0, MPI_COMM_WORLD);
 
-			for(i=0;i<N*nduty;i++)
+			for(i=0;i<N*nopr;i++)
 				tmparrA[i]+=tmparrB[i];
 
-			MPI_Gather(tmparrA, N*nduty, MPI_INT, arrD, N*nduty, MPI_INT, 0, MPI_COMM_WORLD);
+			MPI_Gather(tmparrA, N*nopr, MPI_INT, arrD, N*nopr, MPI_INT, 0, MPI_COMM_WORLD);
 
 			if(my_rank==0){
 				printf("\n===========  C+D  ===========\n");
@@ -182,10 +182,10 @@ MPI_Bcast(&nduty, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 					f=0;
 				}
 				else
-					f=i+my_rank;
+					f = i + my_rank;
 
 				for(j=0; j<N; j++)
-					res[j]+=rowC[f] * rowD[j];
+					res[j] += rowC[f] * rowD[j];
 
 				if (my_rank == 0)
 					MPI_Send(rowD, N, MPI_INT, p-1, 0, MPI_COMM_WORLD);
@@ -196,7 +196,6 @@ MPI_Bcast(&nduty, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 					MPI_Recv(rowD, N, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
 				else
 					MPI_Recv(rowD, N, MPI_INT, my_rank+1, my_rank+1, MPI_COMM_WORLD, &status);
-
 			}
 
 			MPI_Gather(res, N, MPI_INT, arrD, N, MPI_INT, 0, MPI_COMM_WORLD);
