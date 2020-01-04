@@ -195,8 +195,7 @@ int main(int argc, char** argv){
         /**************************************************************************/
         if(my_rank==0){
             while(1){
-                printf(RED"\n---- Program ends here ----\n"RESET);
-                printf(CYAN" Press: 0 to terminate\n Press: 1 to repeat \n Input: "RESET);
+                printf(CYAN"\n Press: 0 to terminate\n Press: 1 to repeat \n Input: "RESET);
                 fflush(stdout);
                 scanf(" %c",&option);
                 printf("\n\n");
