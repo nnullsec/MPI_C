@@ -32,7 +32,7 @@ int main(int argc, char** argv){
     for(;;){
         if(my_rank == 0){
             printf(RED"\n---- Program starts here ----\n"RESET);
-            printf(CYAN" 1. Average\n 2. Despersion \n 3. Custom D vector\n Input: ");
+            printf(CYAN" 1. Average\n 2. Despersion \n 3. Custom D vector\n Input: "RESET);
             fflush(stdout);
             scanf(" %c",&option);
 
